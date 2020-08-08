@@ -10,9 +10,9 @@ function Header() {
 
     useLayoutEffect(() => {
         const height = headerRef.current.getBoundingClientRect().bottom;
-        console.log(headerRef.current.getBoundingClientRect());
+        // console.log(headerRef.current.getBoundingClientRect());
         setH(height);
-    });
+    }, []);
     return (
         <header className={st.header} ref={headerRef}>
             <Tiles h={h} />
