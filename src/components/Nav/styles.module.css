@@ -1,0 +1,17 @@
+.nav {
+    background-color: #fff;
+    color: #333;
+}
+
+.linksList {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    justify-content: center;
+}
+
+.li {
+    font-size: 48px;
+    padding: 0 20px;
+}

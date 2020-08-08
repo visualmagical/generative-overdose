@@ -1,0 +1,8 @@
+.tiles {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: calc(1vw * 13.515625);
+    overflow: hidden;
+}

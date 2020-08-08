@@ -1,0 +1,15 @@
+.logoWrap {
+    background-color:#fff;
+    margin: 0;
+    color: #000;
+
+    font-size:calc(100vw/7.4);
+    width: 100%;
+    letter-spacing: -5px;
+    mix-blend-mode: screen;
+}
+
+.logoText {
+    text-align: center;
+    display: block;
+}

@@ -1,0 +1,5 @@
+.header {
+    overflow: hidden;
+    background-color: #fff;
+    transform: translateY(-20px);
+}
