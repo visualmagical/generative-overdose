@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import Article from '../Article';
 import st from "./styles.module.css";
@@ -36,7 +35,11 @@ const Main = ({ baseHue }) => {
                             snip.indexOf(cutString) !== -1 ? snip.indexOf(cutString) : snip.indexOf(cutString2)
                         ) + cutString.length;
                     }
-                    const newItem = Object.assign(item, { contentSnippet: snip.slice(cutIndex) });
+                    const newItem = Object.assign(item, {
+                        contentSnippet: snip.slice(cutIndex),
+                        source: 'Colossal',
+                    });
+                    console.log(newItem.source)
                     return newItem;
                 })
                 feedo.push(colossalFeed);
@@ -51,23 +54,32 @@ const Main = ({ baseHue }) => {
 
             await parser.parseURL(CORS_PROXY + urlList.artnome, function(err, feed) {
                 if (err) throw err;
-                feedo.push(feed.items)
+                const labeled = feed.items.map(item => ( Object.assign(item, { source: 'Increment' })))
+                console.log(labeled[0].source)
+                feedo.push(labeled);
             })
 
             await parser.parseURL(CORS_PROXY + urlList.clot, function(err, feed) {
                 if (err) throw err;
-                feedo.push(feed.items)
+                const labeled = feed.items.map(item => ( Object.assign(item, { source: 'Clot' })))
+                console.log(labeled[0].source)
+                feedo.push(labeled);
             })
 
             await parser.parseURL(CORS_PROXY + urlList.increment, function(err, feed) {
                 if (err) throw err;
-                feedo.push(feed.items)
+                const labeled = feed.items.map(item => ( Object.assign(item, { source: 'Increment' })))
+                console.log(labeled[0].source)
+                feedo.push(labeled);
             })
 
             await parser.parseURL(CORS_PROXY + urlList.dan, function(err, feed) {
                 if (err) throw err;
-                feedo.push(feed.items)
+                const labeled = feed.items.map(item => ( Object.assign(item, { source: 'Seeking Outside' })))
+                console.log(labeled[0].source)
+                feedo.push(labeled);
             })
+
 
             const ff = feedo
                 .flat(1)
@@ -87,7 +99,13 @@ const Main = ({ baseHue }) => {
                     return dateB - dateA;
                 })
                 .slice(0,20);
-            setFeed(ff)
+
+            const feedObject = {
+                entities: ff,
+            }
+            const data = JSON.stringify(feedObject);
+
+            setFeed(ff);
         }
 
         getFeed()
@@ -122,21 +140,18 @@ const Main = ({ baseHue }) => {
 
     return (
         <main className={st.main}>
-
             <ul>
-                {feed && feed.map(c => {
-                    const createMarkup = () => ({__html: c.contentSnippet})
-                    return(
-                        <Article
-                            key={c.title}
-                            title={c.title}
-                            link={c.link}
-                            date={c.formattedDate}
-                            description={createMarkup()}
-                            hue={baseHue}
-                        />
-                    )
-                })}
+                {feed && feed.map(c => (
+                    <Article
+                        key={c.title}
+                        title={c.title}
+                        link={c.link}
+                        date={c.formattedDate}
+                        hue={baseHue}
+                        keywords={c.categories}
+                        source={c.source}
+                    />
+                ))}
             </ul>
 
 

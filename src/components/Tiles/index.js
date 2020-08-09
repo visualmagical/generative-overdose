@@ -8,7 +8,6 @@ export default ({ h, baseHue }) => {
         cellSize = 5;
 
     const setup = (p5, canvasParentRef) => {
-        // const hh = p5.windowWidth * 0.13515625; // freaking magic number for emergency cases!
         p5.createCanvas(p5.windowWidth, h).parent(canvasParentRef);
         p5.background(255);
         p5.noStroke();
