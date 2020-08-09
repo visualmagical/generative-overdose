@@ -14,4 +14,6 @@
 .li {
     font-size: 48px;
     padding: 0 20px;
+    font-family: 'VT323', sans-serif;
+    letter-spacing: -2px;
 }

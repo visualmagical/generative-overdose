@@ -2,14 +2,14 @@
     background-color:#fff;
     margin: 0;
     color: #000;
-
-    font-size:calc(100vw/7.4);
+    font-size: var(--header-font);
     width: 100%;
-    letter-spacing: -5px;
     mix-blend-mode: screen;
 }
 
 .logoText {
     text-align: center;
     display: block;
+    font-family: 'VT323', sans-serif;
+    letter-spacing: calc(var(--header-font) * -0.029);
 }
