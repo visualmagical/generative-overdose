@@ -1,13 +1,10 @@
-.logoWrap {
+.logo {
     background-color:#fff;
     margin: 0;
     color: #000;
     font-size: var(--header-font);
     width: 100%;
     mix-blend-mode: screen;
-}
-
-.logoText {
     text-align: center;
     display: block;
     font-family: 'VT323', sans-serif;
