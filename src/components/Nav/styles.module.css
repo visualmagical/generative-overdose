@@ -17,3 +17,15 @@
     font-family: 'VT323', sans-serif;
     letter-spacing: -2px;
 }
+
+.li > button {
+    border-radius: 2px;
+    border: none;
+    font-size: 24px;
+    background-color: transparent;
+    font-family: 'PT Sans', sans-serif;
+}
+button.selected {
+    background-color: mediumorchid;
+    color: #fff;
+}

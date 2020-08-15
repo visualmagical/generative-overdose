@@ -9,4 +9,7 @@
     display: block;
     font-family: 'VT323', sans-serif;
     letter-spacing: calc(var(--header-font) * -0.029);
+    line-height: var(--header-font);
+    font-weight: bold;
+    border-bottom: 1px solid #fff;
 }

@@ -4,7 +4,7 @@ import Logo from '../Logo';
 import Nav from '../Nav';
 import st from './styles.module.css';
 
-const Header = ({ baseHue }) => {
+const Header = ({ baseHue, setSelected, whatWentDown }) => {
     const [ h, setH] = useState(0);
     const headerRef = useRef(null);
 
@@ -16,7 +16,7 @@ const Header = ({ baseHue }) => {
         <header className={st.header} ref={headerRef}>
             <Tiles h={h} baseHue={baseHue}/>
             <Logo />
-            {/*<Nav />*/}
+            <Nav setWhat={setSelected} whatWentDown={whatWentDown} />
         </header>
     );
 }
