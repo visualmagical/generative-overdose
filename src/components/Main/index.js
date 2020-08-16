@@ -1,17 +1,22 @@
-import React from 'react';
+import React, {useState} from 'react';
 import News from '../News';
 import Instagram from '../Instagram';
+import Nav from "../Nav";
 
-const Main = ({ whatWentDown }) => {
-    const baseHue = Math.round(Math.random() * 360);
+const Main = ({ baseHue }) => {
+    const [selected, setSelected] = useState('news');
+
     return (
         <div>
-            {whatWentDown === 'news' && (
-                <News baseHue={baseHue} />
-            )}
-            {whatWentDown === 'instagram' && (
-                <Instagram />
-            )}
+            <Nav setWhat={setSelected} whatWentDown={selected} baseHue={baseHue} />
+            <main>
+                {selected === 'news' && (
+                    <News baseHue={baseHue} />
+                )}
+                {selected === 'instagram' && (
+                    <Instagram />
+                )}
+            </main>
         </div>
     );
 }

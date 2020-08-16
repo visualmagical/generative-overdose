@@ -1,18 +1,14 @@
 import React, { useState } from 'react';
 import Header from './components/Header';
 import Main from './components/Main';
+import Nav from "./components/Nav";
 
 const App = () => {
-    const [selected, setSelected] = useState('news');
-    const baseHue = Math.round(Math.random() * 360);
+    const [baseHue] = useState(Math.round(Math.random() * 360));
     return (
-        <div className="App">
-            <Header
-                baseHue={baseHue}
-                setSelected={setSelected}
-                whatWentDown={selected}
-            />
-            <Main whatWentDown={selected} />
+        <div className="App">{console.log('rerender')}
+            <Header baseHue={baseHue} />
+            <Main baseHue={baseHue} />
         </div>
     );
 }

@@ -1,6 +1,7 @@
 .nav {
     background-color: #fff;
     color: #333;
+    margin-bottom: 60px;
 }
 
 .linksList {
@@ -22,10 +23,10 @@
     border-radius: 2px;
     border: none;
     font-size: 24px;
-    background-color: transparent;
     font-family: 'PT Sans', sans-serif;
-}
-button.selected {
-    background-color: mediumorchid;
     color: #fff;
+}
+button.notSelected {
+    color: #333;
+    background-color: transparent !important;
 }

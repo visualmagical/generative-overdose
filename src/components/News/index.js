@@ -56,7 +56,7 @@ const News = ({ baseHue }) => {
 
             await parser.parseURL(CORS_PROXY + urlList.artnome, function(err, feed) {
                 if (err) throw err;
-                const labeled = feed.items.map(item => ( Object.assign(item, { source: 'Artnome' })))
+                const labeled = feed.items.map(item => (Object.assign(item, { source: 'Artnome' })))
                 console.log(labeled[0].source)
                 feedo.push(labeled);
             })
@@ -93,12 +93,17 @@ const News = ({ baseHue }) => {
             const ff = feedo
                 .flat(1)
                 .map(item => {
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString( item['content:encoded'], "text/html");
+                    const preview = doc.querySelector('img');
+                    const  image = preview || '';
                     const snip = item.contentSnippet;
                     const date = new Date(item.pubDate);
                     const newItem = Object.assign(
                         item,
                         { contentSnippet: snip.length > SNIPPET_LENGTH ? `${snip.slice(0, SNIPPET_LENGTH)}...` : snip },
                         { formattedDate: date.toLocaleString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })},
+                        { image },
                     )
                     return newItem;
                 } )
@@ -159,6 +164,7 @@ const News = ({ baseHue }) => {
                         hue={baseHue}
                         keywords={c.categories}
                         source={c.source}
+                        image={c.image}
                     />
                 ))}
             </ul>

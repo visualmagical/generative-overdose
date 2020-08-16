@@ -9,6 +9,7 @@ const Article = ({
     hue,
     keywords,
     source,
+    image,
  }) => {
     const delta = 50 - Math.round(Math.random() * 100);
     // const s = 100 - Math.round(Math.random() * 20); // from 80 to 100
@@ -18,6 +19,10 @@ const Article = ({
     const keywordCss = { borderColor: `hsl(${hue + delta}, 70%, 60%)`};
     const sourceCss = { color: `hsl(${hue + delta}, 70%, 60%)`};
 
+    const createImageMarkup = () => {
+        return {__html: image?.outerHTML};
+    }
+
     return (
         <article className={st.article}>
             <a
@@ -25,10 +30,19 @@ const Article = ({
                 target='_blank'
                 className={st.link}
                 href={link}
-                style={titleCss}
             >
-                {title}
+                <h2
+                    className={st.title}
+                    style={titleCss}
+                >
+                    {title}
+                </h2>
+                {image && (<div
+                    dangerouslySetInnerHTML={createImageMarkup()}
+                    className={st.imageWrap}
+                />)}
             </a>
+
             <ul className={st.keywords}>
                 {keywords && keywords.map(word => (
                     <li
