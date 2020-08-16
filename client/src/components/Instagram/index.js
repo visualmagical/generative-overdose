@@ -1,4 +1,4 @@
-import React, { useEffect, useLayoutEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import st from "./styles.module.css";
 
 const uniqBy = (ary, key) => {
@@ -19,9 +19,36 @@ const Instagram = () => {
     const [feed, setFeed] = useState([]);
     const [isMore, setIsMore] = useState(false);
     const [tag, setTag] = useState('generativeart');
+    const [fav, setFav] = useState({});
     const feedBox = useRef(null);
     const searchBox = useRef(null);
     const COLS = 4;
+
+    useEffect(() => {
+        const sendFav = async () => {
+            const response = await fetch('/api/add', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ fav }),
+            });
+
+            const body = await response.text();
+            console.log(body);
+        }
+        sendFav();
+    }, [fav]);
+
+    // useEffect(() => {
+    //     const getFav = async () => {
+    //         const response = await fetch('favs.json')
+    //         const data = await response.json();
+    //         console.log('respo', data);
+    //     }
+    //     getFav();
+    // }, [fav])
+
 
     useEffect(() => {
         const getFeed = async () => {
@@ -58,19 +85,31 @@ const Instagram = () => {
                 ref={feedBox}
             >
                 {feed && feed.map(({ node }) => (
-                    <a
-                        className={st.item}
-                        href={`https://www.instagram.com/p/${node.shortcode}/`}
+                    <div
+                        className={st.wrap}
                         key={node.id}
-                        rel="noopener noreferrer"
-                        target="_blank"
                     >
-                        <img
-                            className={st.image}
-                            src={node.display_url}
-                            alt="image"
-                        />
-                    </a>
+                        <a
+                            className={st.item}
+                            href={`https://www.instagram.com/p/${node.shortcode}/`}
+                            rel="noopener noreferrer"
+                            target="_blank"
+                        >
+                            <img
+                                className={st.image}
+                                src={node.display_url}
+                                alt="image"
+                            />
+
+                        </a>
+                        <button
+                            className={st.add}
+                            onClick={() => setFav({ display_url: node.display_url, shortcode: node.shortcode })}
+                        >
+                            +
+                        </button>
+                    </div>
+
                 ))}
             </div>
             <button

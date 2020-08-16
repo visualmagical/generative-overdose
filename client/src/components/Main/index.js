@@ -4,7 +4,7 @@ import Instagram from '../Instagram';
 import Nav from "../Nav";
 
 const Main = ({ baseHue }) => {
-    const [selected, setSelected] = useState('news');
+    const [selected, setSelected] = useState('instagram');
 
     return (
         <div>

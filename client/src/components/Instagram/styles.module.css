@@ -30,3 +30,31 @@
 .search {
     padding-bottom: 60px;
 }
+
+.add {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    background-color: chartreuse;
+    color: #fff;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    visibility: hidden;
+}
+
+.wrap {
+    position: relative;
+    height: 240px;
+    overflow: hidden;
+}
+
+.wrap:hover .add {
+    visibility: visible;
+}
