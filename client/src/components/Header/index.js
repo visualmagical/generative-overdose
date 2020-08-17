@@ -1,7 +1,6 @@
 import React, {useState, useRef, useLayoutEffect} from 'react';
 import Tiles from '../Tiles';
 import Logo from '../Logo';
-import Nav from '../Nav';
 import st from './styles.module.css';
 
 const Header = ({ baseHue }) => {

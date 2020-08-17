@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import News from '../News';
 import Instagram from '../Instagram';
 import Nav from "../Nav";
+import Favs from "../Favs";
 
 const Main = ({ baseHue }) => {
     const [selected, setSelected] = useState('instagram');
@@ -15,6 +16,9 @@ const Main = ({ baseHue }) => {
                 )}
                 {selected === 'instagram' && (
                     <Instagram />
+                )}
+                {selected === 'awesomeness' && (
+                    <Favs />
                 )}
             </main>
         </div>

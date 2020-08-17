@@ -114,10 +114,10 @@ const News = ({ baseHue }) => {
                 })
                 // .slice(0,20);
 
-            const feedObject = {
-                entities: ff,
-            }
-            const data = JSON.stringify(feedObject);
+            // const feedObject = {
+            //     entities: ff,
+            // }
+            // const data = JSON.stringify(feedObject);
 
             setFeed(ff);
         }

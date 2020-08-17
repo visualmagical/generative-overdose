@@ -19,35 +19,37 @@ const Instagram = () => {
     const [feed, setFeed] = useState([]);
     const [isMore, setIsMore] = useState(false);
     const [tag, setTag] = useState('generativeart');
-    const [fav, setFav] = useState({});
+    const [newFav, setNewFav] = useState({});
     const feedBox = useRef(null);
     const searchBox = useRef(null);
     const COLS = 4;
 
     useEffect(() => {
-        const sendFav = async () => {
+        const sendNewFav = async () => {
             const response = await fetch('/api/add', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ fav }),
+                body: JSON.stringify({ fav: newFav }),
             });
 
-            const body = await response.text();
-            console.log(body);
+            // const body = await response.text();
+            // console.log(body);
         }
-        sendFav();
-    }, [fav]);
+        // console.log(newFav)
+        sendNewFav();
+    }, [newFav]);
 
+    // TODO remove the following request:
     // useEffect(() => {
     //     const getFav = async () => {
-    //         const response = await fetch('favs.json')
+    //         const response = await fetch('/api/get-favs')
     //         const data = await response.json();
-    //         console.log('respo', data);
+    //         // console.log('respo', data);
     //     }
     //     getFav();
-    // }, [fav])
+    // }, [newFav])
 
 
     useEffect(() => {
@@ -84,7 +86,7 @@ const Instagram = () => {
                 className={st.feed}
                 ref={feedBox}
             >
-                {feed && feed.map(({ node }) => (
+                {feed.length > 0 && feed.map(({ node }) => (
                     <div
                         className={st.wrap}
                         key={node.id}
@@ -98,13 +100,13 @@ const Instagram = () => {
                             <img
                                 className={st.image}
                                 src={node.display_url}
-                                alt="image"
+                                alt={node.shortcode}
                             />
 
                         </a>
                         <button
                             className={st.add}
-                            onClick={() => setFav({ display_url: node.display_url, shortcode: node.shortcode })}
+                            onClick={() => setNewFav({ display_url: node.display_url, shortcode: node.shortcode })}
                         >
                             +
                         </button>

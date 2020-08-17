@@ -2,7 +2,6 @@
 import React from 'react';
 import cn from 'classnames';
 import st from "./styles.module.css";
-import Header from "../Header";
 
 // TODO make map instead of repeating list items
 const Nav = ({ setWhat, whatWentDown, baseHue }) => (
@@ -39,7 +38,7 @@ const Nav = ({ setWhat, whatWentDown, baseHue }) => (
 
             <li className={st.li}>
                 <button
-                    onClick={() => console.log('привет')}
+                    onClick={() => setWhat('awesomeness')}
                     className={cn({[st.notSelected]: whatWentDown !== 'awesomeness'})}
                     style={{backgroundColor: `hsl(${baseHue}, 70%, 60%)`}}
                 >

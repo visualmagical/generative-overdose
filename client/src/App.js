@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import Header from './components/Header';
 import Main from './components/Main';
-import Nav from "./components/Nav";
 
 const App = () => {
     const [baseHue] = useState(Math.round(Math.random() * 360));
