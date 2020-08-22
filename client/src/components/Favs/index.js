@@ -3,19 +3,35 @@ import st from "./styles.module.css";
 
 
 
-const Instagram = () => {
+const Favs = () => {
     const [favs, setFavs] = useState([]);
+    const [weirdFav, setWeirdFav] = useState(null);
     // const COLS = 4;
 
 
     useEffect(() => {
-        const getFav = async () => {
+        const getFavs = async () => {
             const response = await fetch('/api/get-favs')
             const data = await response.json();
-            setFavs(data.nodes.reverse())
+            setFavs(data.nodes?.reverse());
         }
-        getFav();
+        getFavs();
     }, [])
+
+    useEffect(() => {
+        const removeFav = async () => {
+            const response = await fetch('/api/remove-fav', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ fav: weirdFav }),
+            });
+            const data = await response.json();
+            setFavs(data.nodes?.reverse());
+        }
+        if (weirdFav) removeFav();
+    }, [weirdFav])
 
 
     return (
@@ -23,7 +39,7 @@ const Instagram = () => {
             <div
                 className={st.feed}
             >
-                {favs.length > 0 && favs.map(node => (
+                {favs?.length > 0 && favs.map(node => (
                     <div
                         className={st.wrap}
                         key={node.shortcode}
@@ -41,7 +57,14 @@ const Instagram = () => {
                             />
 
                         </a>
+                        <button
+                            className={st.add}
+                            onClick={() => setWeirdFav({ display_url: node.display_url, shortcode: node.shortcode })}
+                        >
+                            ✕
+                        </button>
                     </div>
+
 
                 ))}
             </div>
@@ -49,4 +72,4 @@ const Instagram = () => {
     );
 }
 
-export default Instagram;
+export default Favs;

@@ -12,7 +12,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.post('/api/add', (req, res) => {
     res.send(
-        `I received your POST request. This is what you sent me: ${req.body.fav.display_url}`,
+        `add this item: ${req.body.fav.display_url}`,
     );
 
     if (req.body.fav.shortcode) {
@@ -25,6 +25,26 @@ app.post('/api/add', (req, res) => {
         });
     }
 });
+
+app.post('/api/remove-fav', (req, res) => {
+    let filteredFavs;
+
+    // console.log('req.body.fav: ', req.body.fav)
+    if (req.body.fav && req.body.fav.shortcode) {
+        const filteredFavsAry = favourites.nodes.filter(item => {
+            console.log(item.shortcode, req.body.fav.shortcode)
+            return item.shortcode !== req.body.fav.shortcode;
+        })
+        filteredFavs = { nodes: filteredFavsAry }
+    };
+
+    fs.writeFile(`./favs.json`, JSON.stringify(filteredFavs), err => {
+        // Checking for errors
+        if (err) throw err;
+        console.log("Done writing"); // Success
+        res.send(filteredFavs);
+    });
+})
 
 app.get('/api/get-favs', (req, res) => {
     res.send(favourites)

@@ -19,7 +19,7 @@ const Instagram = () => {
     const [feed, setFeed] = useState([]);
     const [isMore, setIsMore] = useState(false);
     const [tag, setTag] = useState('generativeart');
-    const [newFav, setNewFav] = useState({});
+    const [newFav, setNewFav] = useState(null);
     const feedBox = useRef(null);
     const searchBox = useRef(null);
     const COLS = 4;
@@ -37,20 +37,8 @@ const Instagram = () => {
             // const body = await response.text();
             // console.log(body);
         }
-        // console.log(newFav)
-        sendNewFav();
+        if (newFav) sendNewFav();
     }, [newFav]);
-
-    // TODO remove the following request:
-    // useEffect(() => {
-    //     const getFav = async () => {
-    //         const response = await fetch('/api/get-favs')
-    //         const data = await response.json();
-    //         // console.log('respo', data);
-    //     }
-    //     getFav();
-    // }, [newFav])
-
 
     useEffect(() => {
         const getFeed = async () => {

@@ -33,12 +33,12 @@
 
 .add {
     position: absolute;
-    top: 5px;
-    right: 5px;
+    top: 0;
+    right: 0;
     width: 15px;
     height: 15px;
-    border-radius: 50%;
-    background-color: chartreuse;
+    border-radius: 2px;
+    background-color: rgba(0,0,0,.6);
     color: #fff;
     font-size: 16px;
     border: none;
@@ -53,6 +53,7 @@
     position: relative;
     height: 240px;
     overflow: hidden;
+    border-radius: 2px;
 }
 
 .wrap:hover .add {
