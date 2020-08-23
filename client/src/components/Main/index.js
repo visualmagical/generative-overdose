@@ -15,7 +15,7 @@ const Main = ({ baseHue }) => {
                     <News baseHue={baseHue} />
                 )}
                 {selected === 'instagram' && (
-                    <Instagram />
+                    <Instagram baseHue={baseHue} />
                 )}
                 {selected === 'awesomeness' && (
                     <Favs />

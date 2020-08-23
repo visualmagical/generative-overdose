@@ -16,7 +16,7 @@ const sliceByCols = (ary, cols) => {
     return ary.slice(0, len - remainder);
 }
 
-const Instagram = () => {
+const Instagram = ({ baseHue }) => {
     const [feed, setFeed] = useState([]);
     const [isMore, setIsMore] = useState(false);
     const [isWaiting, setIsWaiting] = useState(false);
@@ -30,18 +30,33 @@ const Instagram = () => {
     const searchBox = useRef(null);
     const COLS = 4;
     const debouncedSearchTerm = useDebounce(input, 700)
+    const inputCss = {
+        borderColor: `hsl(${baseHue}, 70%, 60%)`,
+        color: `hsl(${baseHue}, 70%, 60%)`,
+    };
+    const hashCss = {
+        color: `hsl(${baseHue}, 70%, 60%)`,
+    };
+    const buttonCss = {
+        backgroundColor: `hsl(${baseHue}, 70%, 60%)`,
+        borderColor: `hsl(${baseHue}, 70%, 60%)`,
+    };
+
+
+    const updateTag = value => {
+        setIsWaiting(true)
+        setInput(value.trim())
+    }
 
     useEffect(() => {
 
         if (debouncedSearchTerm) {
             const regex = /^[A-Za-z0-9]+$/
             const isValid = regex.test(debouncedSearchTerm);
-            console.log(isValid);
             if (isValid) {
                 setTag(debouncedSearchTerm)
                 setIsNewTag(true)
-            }
-            else {
+            } else {
                 setIsWaiting(false)
                 setInputInvalid(true)
             }
@@ -49,11 +64,6 @@ const Instagram = () => {
             setIsWaiting(false)
         }
     }, [debouncedSearchTerm])
-
-    const updateSearch = value => {
-        setIsWaiting(true)
-        setInput(value.trim())
-    }
 
     useEffect(() => {
         const sendNewFav = async () => {
@@ -91,30 +101,31 @@ const Instagram = () => {
                 window.scrollTo( 0, offSet);
                 setIsMore(false);
             }
-            console.log('more ', isMore, 'max suff ', maxIdSuffix)
-            console.log(`https://www.instagram.com/explore/tags/${tag}/?__a=1${maxIdSuffix}`)
-            console.log(cropped)
         }
-        console.log('tag ', tag)
-
-        // if (tag) {
-            // console.log('tag', tag)
-            getFeed();
-        // }
-
+        getFeed();
     }, [isMore, tag]);
 
     return (
         <div className={st.instagram}>
             <div
-                className={st.search}
+                className={st.inputWrap}
                 ref={searchBox}
+                style={inputCss}
             >
                 <input
+                    className={st.input}
+                    style={inputCss}
+                    autoFocus
                     type="text"
                     defaultValue={tag}
-                    onChange={({ target }) => updateSearch(target.value)}
+                    onChange={({ target }) => updateTag(target.value)}
                 />
+                <span
+                    className={st.hash}
+                    style={hashCss}
+                >
+                    #
+                </span>
             </div>
             <div
                 className={st.feed}
@@ -149,6 +160,8 @@ const Instagram = () => {
                 ))}
             </div>
             <button
+                style={buttonCss}
+                className={st.more}
                 onClick={() => setIsMore(true)}
             >
                 more

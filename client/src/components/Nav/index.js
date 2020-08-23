@@ -26,7 +26,7 @@ const Nav = ({ setWhat, whatWentDown, baseHue }) => (
                 </button>
             </li>
 
-            <li className={st.li}>
+{/*            <li className={st.li}>
                 <button
                     onClick={() => console.log('привет')}
                     className={cn([st.button], {[st.notSelected]: whatWentDown !== 'openprocessing'})}
@@ -35,6 +35,7 @@ const Nav = ({ setWhat, whatWentDown, baseHue }) => (
                     open processing
                 </button>
             </li>
+*/}
 
             <li className={st.li}>
                 <button
