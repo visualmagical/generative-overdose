@@ -28,7 +28,7 @@
 }
 
 .inputWrap {
-    margin-bottom: 60px;
+    /*margin-bottom: 60px;*/
     /*height: 100px;*/
     position: relative;
     display: flex;
@@ -115,4 +115,18 @@
     color: #fff;
     border: 2px solid #333 !important;
     background-color: #333 !important;
+}
+
+
+.topControls {
+    display: flex;
+    margin-bottom: 60px;
+}
+
+.switcher {
+    margin-right: 3em;
+}
+
+.selectLabel {
+    margin-right: .5em;
 }
