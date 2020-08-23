@@ -26,21 +26,32 @@ const Instagram = ({ baseHue }) => {
     const [isAccessErr, setIsAccessErr] = useState(false);
     const [isUndefPage, setIsUndefPage] = useState(false);
 
-    // const [endCursor, setEndCursor] = useState('');
-    // const [hasNextPage, setHasNextPage] = useState(false);
     const [userInfo, setUserInfo] = useState(null);
     const artists = [
-        // 'visualmagical',
-        'jnntnnr',
         'kgolid',
         'iso.hedron',
         'shedrawswithcode',
-        // 'georgerowe',
+        'juanrg92',
+        'andrewjamesart',
+        'thejohnharman',
+        'georgehenryrowe',
         'dmitricherniak',
         'mattdesl_art',
-        'maxcoopermax',
         'lejeunerenard',
+        'tylerxhobbs',
+        'jnntnnr',
+        'okazzsp',
+        'zenwebb',
+        'mrprudence',
+        'polyhop',
+        'chromasfera',
+        'creativedrought',
+        'nlgenerative',
+        'generated.xyz',
+        'des_r_clarke',
         'nervous.system',
+        // 'maxcoopermax',
+        // 'georgerowe',
     ]
 
     const [isNewTerm, setIsNewTerm] = useState(false);
@@ -150,16 +161,13 @@ const Instagram = ({ baseHue }) => {
                 setUserInfo(data.data.user.edge_owner_to_timeline_media.page_info)
             }
 
-            // debugger
             if (isNewTerm) {
                 next = uniqBy([...nodes], it => (it.node.id));
                 setIsNewTerm(false)
             } else {
                 next = uniqBy([...feed, ...nodes], it => (it.node.id)); // remove duplets
             }
-            // const cropped = userInfo?.has_next_page ? sliceByCols([...next], COLS) : next;
             const cropped = displayByHash ? sliceByCols([...next], COLS) : next;
-            // console.log('cropped', cropped)
             setFeed(cropped);
             if (isMore) {
                 window.scrollTo( 0, offSet);
