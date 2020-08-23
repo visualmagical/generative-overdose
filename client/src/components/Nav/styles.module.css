@@ -19,15 +19,26 @@
     letter-spacing: -2px;
 }
 
-.li > button {
+.button {
     border-radius: 2px;
     border: none;
     font-size: 24px;
     font-family: 'PT Sans', sans-serif;
     color: #fff;
     cursor: pointer;
+    /*box-shadow:0 5px 0 5px mediumorchid;*/
 }
-button.notSelected {
+.button.notSelected {
     color: #333;
     background-color: transparent !important;
+    border: none;
+}
+
+.button:focus{
+    outline: none;
+    /*outline: 2px dotted #ccc;*/
+}
+
+.button:active {
+    outline: none;
 }

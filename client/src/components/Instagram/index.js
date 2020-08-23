@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
+import { useDebounce } from '../../tools/debounce';
 import st from "./styles.module.css";
 
 const uniqBy = (ary, key) => {
@@ -18,11 +19,41 @@ const sliceByCols = (ary, cols) => {
 const Instagram = () => {
     const [feed, setFeed] = useState([]);
     const [isMore, setIsMore] = useState(false);
+    const [isWaiting, setIsWaiting] = useState(false);
+    const [inputInvalid, setInputInvalid] = useState(false);
+
+    const [isNewTag, setIsNewTag] = useState(false);
+    const [input, setInput] = useState('');
     const [tag, setTag] = useState('generativeart');
     const [newFav, setNewFav] = useState(null);
     const feedBox = useRef(null);
     const searchBox = useRef(null);
     const COLS = 4;
+    const debouncedSearchTerm = useDebounce(input, 700)
+
+    useEffect(() => {
+
+        if (debouncedSearchTerm) {
+            const regex = /^[A-Za-z0-9]+$/
+            const isValid = regex.test(debouncedSearchTerm);
+            console.log(isValid);
+            if (isValid) {
+                setTag(debouncedSearchTerm)
+                setIsNewTag(true)
+            }
+            else {
+                setIsWaiting(false)
+                setInputInvalid(true)
+            }
+        } else {
+            setIsWaiting(false)
+        }
+    }, [debouncedSearchTerm])
+
+    const updateSearch = value => {
+        setIsWaiting(true)
+        setInput(value.trim())
+    }
 
     useEffect(() => {
         const sendNewFav = async () => {
@@ -43,21 +74,35 @@ const Instagram = () => {
     useEffect(() => {
         const getFeed = async () => {
             const offSet = window.pageYOffset;
-            const maxIdSuffix = feed.length > 1 ? `&max_id=${feed[feed.length - 1].node.id}` : '';
+            const maxIdSuffix = (feed.length > 1 && isMore) ? `&max_id=${feed[feed.length - 1].node.id}` : '';
             const raw = await fetch(`https://www.instagram.com/explore/tags/${tag}/?__a=1${maxIdSuffix}`);
             const data = await raw.json();
             const nodes = data.graphql.hashtag.edge_hashtag_to_media.edges;
-            const next = uniqBy([...feed, ...nodes], it => (it.node.id)); // remove duplets
+            let next;
+            if (isNewTag) {
+                next = uniqBy([...nodes], it => (it.node.id));
+                setIsNewTag(false)
+            } else {
+                next = uniqBy([...feed, ...nodes], it => (it.node.id)); // remove duplets
+            }
             const cropped = sliceByCols([...next], COLS);
             setFeed(cropped);
             if (isMore) {
                 window.scrollTo( 0, offSet);
                 setIsMore(false);
             }
+            console.log('more ', isMore, 'max suff ', maxIdSuffix)
+            console.log(`https://www.instagram.com/explore/tags/${tag}/?__a=1${maxIdSuffix}`)
+            console.log(cropped)
         }
-        getFeed();
+        console.log('tag ', tag)
 
-    }, [isMore]);
+        // if (tag) {
+            // console.log('tag', tag)
+            getFeed();
+        // }
+
+    }, [isMore, tag]);
 
     return (
         <div className={st.instagram}>
@@ -67,7 +112,8 @@ const Instagram = () => {
             >
                 <input
                     type="text"
-                    onChange={({ target }) => setTag(target.value)}
+                    defaultValue={tag}
+                    onChange={({ target }) => updateSearch(target.value)}
                 />
             </div>
             <div

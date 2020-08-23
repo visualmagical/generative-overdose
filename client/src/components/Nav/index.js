@@ -5,12 +5,12 @@ import st from "./styles.module.css";
 
 // TODO make map instead of repeating list items
 const Nav = ({ setWhat, whatWentDown, baseHue }) => (
-    <nav className={st.nav}>{console.log(whatWentDown)}
+    <nav className={st.nav}>
         <ul className={st.linksList}>
             <li className={st.li}>
                 <button
                     onClick={() => setWhat('news')}
-                    className={cn({[st.notSelected]: whatWentDown !== 'news'})}
+                    className={cn([st.button], {[st.notSelected]: whatWentDown !== 'news'})}
                     style={{backgroundColor: `hsl(${baseHue}, 70%, 60%)`}}
                 >
                     news
@@ -19,7 +19,7 @@ const Nav = ({ setWhat, whatWentDown, baseHue }) => (
             <li className={st.li}>
                 <button
                     onClick={() => setWhat('instagram')}
-                    className={cn({[st.notSelected]: whatWentDown !== 'instagram'})}
+                    className={cn([st.button], {[st.notSelected]: whatWentDown !== 'instagram'})}
                     style={{backgroundColor: `hsl(${baseHue}, 70%, 60%)`}}
                 >
                     instagram
@@ -29,7 +29,7 @@ const Nav = ({ setWhat, whatWentDown, baseHue }) => (
             <li className={st.li}>
                 <button
                     onClick={() => console.log('привет')}
-                    className={cn({[st.notSelected]: whatWentDown !== 'openprocessing'})}
+                    className={cn([st.button], {[st.notSelected]: whatWentDown !== 'openprocessing'})}
                     style={{backgroundColor: `hsl(${baseHue}, 70%, 60%)`}}
                 >
                     open processing
@@ -39,7 +39,7 @@ const Nav = ({ setWhat, whatWentDown, baseHue }) => (
             <li className={st.li}>
                 <button
                     onClick={() => setWhat('awesomeness')}
-                    className={cn({[st.notSelected]: whatWentDown !== 'awesomeness'})}
+                    className={cn([st.button], {[st.notSelected]: whatWentDown !== 'awesomeness'})}
                     style={{backgroundColor: `hsl(${baseHue}, 70%, 60%)`}}
                 >
                     awesomeness
