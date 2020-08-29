@@ -48,6 +48,7 @@ const artists = [
     'jacobvanloon',
     'jessieandkatey',
     'revdancatt',
+    'nonzeroexitcode',
     // 'shagey_',
     // 'maxcoopermax',
     // 'georgerowe',
