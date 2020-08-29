@@ -33,6 +33,7 @@
     position: relative;
     display: flex;
     font-size: 16px;
+    width: 180px;
 }
 
 .input {
@@ -101,30 +102,59 @@
 }
 
 .more {
+    height: 31px;
+}
+
+.switcher,
+.more {
     color: #fff;
     border: 2px solid;
     font-size: 16px;
     font-family: 'PT Sans', sans-serif;
-    -webkit-border-radius: 2px;
-    -moz-border-radius: 2px;
     border-radius: 2px;
     cursor: pointer;
 }
-
+.switcher:hover,
 .more:hover {
     color: #fff;
     border: 2px solid #333 !important;
     background-color: #333 !important;
 }
 
+.select {
+    border: 2px solid #333;
+    font-size: 16px;
+    padding: .2em;
+    padding-left: 0;
+    font-family: 'PT Sans', sans-serif;
+    cursor: pointer;
+    border-radius: 2px;
+    width: 180px;
+}
+
+.select:focus {
+    border-color: #333 !important;
+    color: #333 !important;
+}
+
+.switcher:active,
+.switcher:focus,
+.more:active,
+.more:focus,
+.select:active,
+.select:focus {
+    outline: none;
+}
 
 .topControls {
     display: flex;
     margin-bottom: 60px;
+    height: 31px;
 }
 
 .switcher {
     margin-right: 3em;
+    min-width: 150px;
 }
 
 .selectLabel {

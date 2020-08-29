@@ -16,50 +16,55 @@ const sliceByCols = (ary, cols) => {
     return ary.slice(0, len - remainder);
 }
 
+const artists = [
+    'kgolid',
+    'iso.hedron',
+    'shedrawswithcode',
+    'juanrg92',
+    'andrewjamesart',
+    'thejohnharman',
+    'georgehenryrowe',
+    'dmitricherniak',
+    'mattdesl_art',
+    'lejeunerenard',
+    'tylerxhobbs',
+    'jnntnnr',
+    'makecodenotart',
+    'lastrea_',
+    'chromasfera',
+    'okazzsp',
+    'thirdvision.co',
+    'zenwebb',
+    'feamonkey',
+    'mrprudence',
+    'polyhop',
+    'holgerlippmann',
+    'creativedrought',
+    'nlgenerative',
+    'generated.xyz',
+    'des_r_clarke',
+    'nervous.system',
+    'soficrespo91',
+    'jacobvanloon',
+    'jessieandkatey',
+    'revdancatt',
+    // 'shagey_',
+    // 'maxcoopermax',
+    // 'georgerowe',
+].sort();
+
 const Instagram = ({ baseHue }) => {
     const [feed, setFeed] = useState([]);
     const [isMore, setIsMore] = useState(false);
     const [isWaiting, setIsWaiting] = useState(false);
     const [inputInvalid, setInputInvalid] = useState(false);
     const [displayByHash, setDisplayByHash] = useState(false);
-    const [selectedArtist, setSelectedArtist] = useState('kgolid');
+    const [selectedArtist, setSelectedArtist] = useState(artists[0]);
     const [isAccessErr, setIsAccessErr] = useState(false);
     const [isUndefPage, setIsUndefPage] = useState(false);
 
     const [userInfo, setUserInfo] = useState(null);
-    const artists = [
-        'kgolid',
-        'iso.hedron',
-        'shedrawswithcode',
-        'juanrg92',
-        'andrewjamesart',
-        'thejohnharman',
-        'georgehenryrowe',
-        'dmitricherniak',
-        'mattdesl_art',
-        'lejeunerenard',
-        'tylerxhobbs',
-        'jnntnnr',
-        'makecodenotart',
-        'lastrea_',
-        'chromasfera',
-        'okazzsp',
-        'thirdvision.co',
-        'zenwebb',
-        'mrprudence',
-        'polyhop',
-        'creativedrought',
-        'nlgenerative',
-        'generated.xyz',
-        'des_r_clarke',
-        'nervous.system',
-        'soficrespo91',
-        'jacobvanloon',
-        'jessieandkatey',
-        'revdancatt',
-        // 'maxcoopermax',
-        // 'georgerowe',
-    ]
+
 
     const [isNewTerm, setIsNewTerm] = useState(false);
     const [input, setInput] = useState('');
@@ -188,6 +193,7 @@ const Instagram = ({ baseHue }) => {
         <div className={st.instagram}>
             <div className={st.topControls}>
                 <button
+                    style={buttonCss}
                     className={st.switcher}
                     onClick={() => onTermSwitch()}
                 >
@@ -220,10 +226,13 @@ const Instagram = ({ baseHue }) => {
                     </div>
                 ) : (
                     <>
-                        <div className={st.selectLabel}>select artist:</div>
+                        {/*<div className={st.selectLabel}>select artist:</div>*/}
                         <select
+                            className={st.select}
+                            style={inputCss}
                             name="artists"
                             id="artists"
+                            autoFocus
                             onChange={({ target }) => updateArtist(target.value)}
                         >
                             {artists.map(a => (
@@ -259,7 +268,10 @@ const Instagram = ({ baseHue }) => {
                         </a>
                         <button
                             className={st.add}
-                            onClick={() => setNewFav({ display_url: node.display_url, shortcode: node.shortcode })}
+                            onClick={() => setNewFav({
+                                display_url: node.display_url,
+                                shortcode: node.shortcode
+                            })}
                         >
                             +
                         </button>
