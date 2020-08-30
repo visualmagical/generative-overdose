@@ -1,7 +1,7 @@
-## Generative overdose
-The tool that helps you monitor fresh art & tech news and latest generative sketches on the web.
+# Generative overdose
+*The tool that helps you monitor fresh art & tech news and latest generative sketches on the web.*
 
-## Getting started
+### Getting started
 First, make sure you've got `yarn` and `nodemon` installed. If not:
 ```
 npm install -g yarn
@@ -13,7 +13,7 @@ Then you'll want to install all the dependencies:
 yarn deps
 ```
 
-## Development
+### Development
 To run the app locally type the following:
 ```
 yarn dev
