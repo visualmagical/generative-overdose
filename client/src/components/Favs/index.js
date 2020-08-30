@@ -14,7 +14,7 @@ const Favs = () => {
         const getFavs = async () => {
             const jsondata = await fetch('/api/get-favs')
             const data = await jsondata.json();
-            const favsReversed = data.nodes?.reverse()
+            const favsReversed = await data.nodes?.reverse()
             setFavs(favsReversed);
 
             const promises = favsReversed.map( f => {
@@ -34,6 +34,29 @@ const Favs = () => {
                     }))
             })
 
+            // TODO find out how to update state asynchronously
+            // const ary = []
+            // const mapped = favsReversed.map( async f => {
+            //     const fetched = await fetch('/api/fav-images', {
+            //         method: 'POST',
+            //         headers: {
+            //             'Content-Type': 'application/json',
+            //         },
+            //         body: JSON.stringify({shortcode: f.shortcode}),
+            //     })
+            //     const data = await fetched.blob();
+            //     const src = await URL.createObjectURL(data);
+            //     const cleanObject = {
+            //         shortcode: f.shortcode,
+            //         display_url: f.display_url,
+            //         src,
+            //     }
+            //     await ary.push(cleanObject)
+            //     await setFavvs(ary)
+            //     return cleanObject;
+            // })
+
+
             Promise.all(promises).then(res => {
                 setFavvs(res)
             })
@@ -48,18 +71,18 @@ const Favs = () => {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ fav: weirdFav }),
+                body: JSON.stringify({fav: weirdFav}),
             });
             // const data = await response.json();
             // setFavs(data.nodes?.reverse());
-            const newFavvs = [...favvs.filter(f => ( weirdFav.shortcode !== f.shortcode ))]
+            const newFavvs = [...favvs.filter(f => (weirdFav.shortcode !== f.shortcode))]
             setFavvs(newFavvs);
         }
         if (weirdFav) removeFav();
     }, [weirdFav])
 
     return (
-        <div className={st.instagram}>{console.log(favvs)}
+        <div className={st.instagram}>
             <div
                 className={st.feed}
             >
@@ -83,7 +106,7 @@ const Favs = () => {
                         </a>
                         <button
                             className={st.add}
-                            onClick={() => setWeirdFav({ shortcode: node.shortcode })}
+                            onClick={() => setWeirdFav({shortcode: node.shortcode})}
                         >
                             ✕
                         </button>

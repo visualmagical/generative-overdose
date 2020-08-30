@@ -9,21 +9,41 @@
 .link {
     text-decoration: none;
     display: block;
+    color: #fff;
+    position: relative;
 }
 
 .title {
     font-weight: bold;
     font-size: 24px;
-    border-radius: 4px;
+    border-radius: 2px;
     padding: 10px;
-    color: #fff;
     margin: 0;
+    transition: all .3s;
 }
+
+/*.link::after {*/
+/*    position: absolute;*/
+/*    width: 4px;*/
+/*    height: 4px;*/
+/*    left: -10px;*/
+/*    top: 0;*/
+/*    border-radius: 50%;*/
+/*    background-color: limegreen;*/
+/*    content: '';*/
+/*}*/
 
 .link:visited,
 .link:active {
     color: #fff;
 }
+
+.link:visited::after,
+.link:active::after {
+    display: none;
+}
+
+
 
 .description {
     font-size: 16px;
@@ -41,6 +61,7 @@
     font-weight: bold;
     font-size: 16px;
     margin-right: 10px;
+    transition: all .3s;
 }
 
 .date {
@@ -56,6 +77,11 @@
     display: block;
     font-size: 13px;
     font-weight: bold;
+    transition: all .3s;
+}
+
+.word:first-child {
+    margin-left: 0;
 }
 
 .textLine {
@@ -70,4 +96,17 @@
 
 .imageWrap {
     margin-top: 5px;
+}
+
+
+.article:hover .title {
+    background-color: #333 !important;
+}
+
+.article:hover .keywords .word {
+    border-color: #333 !important;
+}
+
+.article:hover .source {
+    color: #333 !important;
 }

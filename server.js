@@ -8,9 +8,10 @@ const app = express();
 const port = process.env.PORT || 5000;
 
 const favourites = require("./favs.json");
+const news = require("./news.json");
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json({ limit: '50mb' }));
+app.use(bodyParser.urlencoded({ limit: '50mb', extended: true, parameterLimit: 50000 }));
 
 app.post('/api/add', (req, res) => {
     res.send(
@@ -19,10 +20,8 @@ app.post('/api/add', (req, res) => {
 
     if (req.body.fav.shortcode) {
         favourites.nodes.push(req.body.fav);
-        console.log('fav: ', req.body.fav.display_url);
 
         function saveImageToDisk(url, localPath) {
-            // var fullUrl = url;
             var file = fs.createWriteStream(localPath);
             var request = https.get(url, function(response) {
                 response.pipe(file);
@@ -49,7 +48,6 @@ app.post('/api/remove-fav', (req, res) => {
     };
 
     fs.writeFile(`./favs.json`, JSON.stringify(filteredFavs), err => {
-        // Checking for errors
         if (err) throw err;
         console.log("Done writing"); // Success
         res.send(filteredFavs);
@@ -59,22 +57,36 @@ app.post('/api/remove-fav', (req, res) => {
 app.get('/api/get-favs', (req, res) => {
     res.send(favourites)
 })
+
 app.post('/api/fav-images', (req, res) => {
     // const img = require(`./fav-images/${req.body}.jpg`);
     // res.send(img);
 
     var file = path.join(__dirname, `fav-images/${req.body.shortcode}.jpg`);
-    console.log('FILE', file)
     var s = fs.createReadStream(file);
 
     s.on('open', function () {
         res.set('Content-Type', 'image/jpeg');
         s.pipe(res);
-        console.log(res)
     });
     s.on('error', function () {
         res.set('Content-Type', 'image/jpeg');
         res.status(404).end('Not found');
     });
 })
+
+app.post('/api/save-news', (req, res) => {
+    console.log(req.body.news[0])
+    fs.writeFile(`./news.json`, JSON.stringify(req.body.news), err => {
+        if (err) throw err;
+        console.log("Done writing"); // Success
+        res.send('News saved');
+    });
+})
+
+app.get('/api/get-news', (req, res) => {
+    res.send(news)
+})
+
+
 app.listen(port, () => console.log(`Listening on port ${port}`));

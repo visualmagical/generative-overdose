@@ -19,10 +19,6 @@ const Article = ({
     const keywordCss = { borderColor: `hsl(${hue + delta}, 70%, 60%)`};
     const sourceCss = { color: `hsl(${hue + delta}, 70%, 60%)`};
 
-    const createImageMarkup = () => {
-        return {__html: image?.outerHTML};
-    }
-
     return (
         <article className={st.article}>
             <a
@@ -37,10 +33,11 @@ const Article = ({
                 >
                     {title}
                 </h2>
-                {image && (<div
-                    dangerouslySetInnerHTML={createImageMarkup()}
-                    className={st.imageWrap}
-                />)}
+                {image && (
+                    <div className={st.imageWrap}>
+                        <img src={image} alt="kek"/>
+                    </div>
+                )}
             </a>
 
             <ul className={st.keywords}>
