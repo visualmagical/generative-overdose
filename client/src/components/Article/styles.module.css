@@ -22,29 +22,6 @@
     transition: all .3s;
 }
 
-/*.link::after {*/
-/*    position: absolute;*/
-/*    width: 4px;*/
-/*    height: 4px;*/
-/*    left: -10px;*/
-/*    top: 0;*/
-/*    border-radius: 50%;*/
-/*    background-color: limegreen;*/
-/*    content: '';*/
-/*}*/
-
-.link:visited,
-.link:active {
-    color: #fff;
-}
-
-.link:visited::after,
-.link:active::after {
-    display: none;
-}
-
-
-
 .description {
     font-size: 16px;
 }
@@ -99,14 +76,26 @@
 }
 
 
-.article:hover .title {
+.link:visited .title {
+    background-color: #aaa !important;
+}
+
+.link:visited .keywords > .word {
+    border-color: #aaa !important;
+}
+
+.link:visited .source {
+    color: #aaa !important;
+}
+
+.link:hover .title {
     background-color: #333 !important;
 }
 
-.article:hover .keywords .word {
+.link:hover .keywords .word {
     border-color: #333 !important;
 }
 
-.article:hover .source {
+.link:hover .source {
     color: #333 !important;
 }

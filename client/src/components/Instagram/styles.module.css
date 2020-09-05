@@ -76,8 +76,9 @@
     position: absolute;
     top: 0;
     right: 0;
-    width: 15px;
-    height: 15px;
+    width: 16px;
+    height: 16px;
+    padding: 0;
     border-radius: 2px;
     background-color: rgba(0,0,0,.6);
     color: #fff;
@@ -90,11 +91,23 @@
     visibility: hidden;
 }
 
+.add:focus,
+.add:hover {
+    outline: none;
+    background-color: #333 !important;
+}
+
 .wrap {
     position: relative;
     height: 240px;
     overflow: hidden;
     border-radius: 2px;
+}
+
+.wrap:hover {
+    /*border-color: #333;*/
+    /*transform: scale(1.01);*/
+    /*transform: translateY(-3px);*/
 }
 
 .wrap:hover .add {

@@ -36,8 +36,6 @@
     top: 0;
     right: 0;
     border-radius: 2px;
-    width: 15px;
-    height: 15px;
     background-color: rgba(0,0,0,.6);
     font-size: 12px;
     color: #fff;
@@ -47,6 +45,9 @@
     align-items: center;
     justify-content: center;
     visibility: hidden;
+    width: 16px;
+    height: 16px;
+    padding: 0;
 }
 
 .wrap {
@@ -54,6 +55,12 @@
     height: 240px;
     overflow: hidden;
     border-radius: 2px;
+}
+
+.add:focus,
+.add:hover {
+    outline: none;
+    background-color: #333 !important;
 }
 
 .wrap:hover .add {

@@ -1,17 +1,23 @@
 import React, { useEffect, useState } from 'react';
+import Preloader from '../Preloader';
 import st from "./styles.module.css";
 
 
 
-const Favs = () => {
+const Favs = ({ baseHue }) => {
     const [favs, setFavs] = useState([]);
+    const [isWaiting, setIsWaiting] = useState(false)
     const [favvs, setFavvs] = useState([]);
     const [weirdFav, setWeirdFav] = useState(null);
     // const COLS = 4;
 
+    const rmBtnCss = {
+        backgroundColor: `hsl(${baseHue}, 70%, 60%)`
+    }
 
     useEffect(() => {
         const getFavs = async () => {
+            setIsWaiting(true);
             const jsondata = await fetch('/api/get-favs')
             const data = await jsondata.json();
             const favsReversed = await data.nodes?.reverse()
@@ -58,7 +64,8 @@ const Favs = () => {
 
 
             Promise.all(promises).then(res => {
-                setFavvs(res)
+                setFavvs(res);
+                setIsWaiting(false);
             })
         }
         getFavs();
@@ -83,38 +90,43 @@ const Favs = () => {
 
     return (
         <div className={st.instagram}>
-            <div
-                className={st.feed}
-            >
-                {favvs?.length > 0 && favvs.map(node => (
-                    <div
-                        className={st.wrap}
-                        key={node.shortcode}
-                    >
-                        <a
-                            className={st.item}
-                            href={`https://www.instagram.com/p/${node.shortcode}/`}
-                            rel="noopener noreferrer"
-                            target="_blank"
+            {isWaiting ? (
+                <Preloader baseHue={baseHue} />
+            ) : (
+                <div
+                    className={st.feed}
+                >
+                    {favvs?.length > 0 && favvs.map(node => (
+                        <div
+                            className={st.wrap}
+                            key={node.shortcode}
                         >
-                            <img
-                                className={st.image}
-                                src={node.src}
-                                alt={node.shortcode}
-                            />
+                            <a
+                                className={st.item}
+                                href={`https://www.instagram.com/p/${node.shortcode}/`}
+                                rel="noopener noreferrer"
+                                target="_blank"
+                            >
+                                <img
+                                    className={st.image}
+                                    src={node.src}
+                                    alt={node.shortcode}
+                                />
 
-                        </a>
-                        <button
-                            className={st.add}
-                            onClick={() => setWeirdFav({shortcode: node.shortcode})}
-                        >
-                            ✕
-                        </button>
-                    </div>
+                            </a>
+                            <button
+                                className={st.add}
+                                style={rmBtnCss}
+                                onClick={() => setWeirdFav({shortcode: node.shortcode})}
+                            >
+                                ✕
+                            </button>
+                        </div>
 
 
-                ))}
-            </div>
+                    ))}
+                </div>
+            )}
         </div>
     );
 }

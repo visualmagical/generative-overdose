@@ -5,7 +5,7 @@ import Main from './components/Main';
 const App = () => {
     const [baseHue] = useState(Math.round(Math.random() * 360));
     return (
-        <div className="App">{console.log('rerender')}
+        <div className="App">
             <Header baseHue={baseHue} />
             <Main baseHue={baseHue} />
         </div>

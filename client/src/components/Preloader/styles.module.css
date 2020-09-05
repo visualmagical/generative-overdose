@@ -1,0 +1,8 @@
+.preloader {
+    border-radius: 2px;
+    overflow: hidden
+}
+
+.preloader canvas {
+    display: block;
+}

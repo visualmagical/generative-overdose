@@ -33,33 +33,34 @@ const Article = ({
                 >
                     {title}
                 </h2>
+
                 {image && (
                     <div className={st.imageWrap}>
                         <img src={image} alt="kek"/>
                     </div>
                 )}
+
+                <ul className={st.keywords}>
+                    {keywords && keywords.map(word => (
+                        <li
+                            style={keywordCss}
+                            className={st.word}
+                            key={word}
+                        >
+                            {word}
+                        </li>
+                    ))}
+                </ul>
+
+                <p className={st.textLine} >
+                    <span className={st.source} style={sourceCss}>
+                        {source}
+                    </span>
+                    <span className={st.date}>
+                        {date}
+                    </span>
+                </p>
             </a>
-
-            <ul className={st.keywords}>
-                {keywords && keywords.map(word => (
-                    <li
-                        style={keywordCss}
-                        className={st.word}
-                        key={word}
-                    >
-                        {word}
-                    </li>
-                ))}
-            </ul>
-
-            <p className={st.textLine} >
-                <span className={st.source} style={sourceCss}>
-                    {source}
-                </span>
-                <span className={st.date}>
-                    {date}
-                </span>
-            </p>
         </article>
     );
 }

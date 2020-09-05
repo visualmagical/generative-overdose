@@ -5,7 +5,7 @@ import Nav from "../Nav";
 import Favs from "../Favs";
 
 const Main = ({ baseHue }) => {
-    const [selected, setSelected] = useState('news');
+    const [selected, setSelected] = useState('instagram');
 
     return (
         <div>
@@ -18,7 +18,7 @@ const Main = ({ baseHue }) => {
                     <Instagram baseHue={baseHue} />
                 )}
                 {selected === 'awesomeness' && (
-                    <Favs />
+                    <Favs baseHue={baseHue} />
                 )}
             </main>
         </div>

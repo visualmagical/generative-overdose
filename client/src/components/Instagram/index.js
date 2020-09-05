@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useDebounce } from '../../tools/debounce';
+import Preloader from '../Preloader';
 import st from "./styles.module.css";
 
 const uniqBy = (ary, key) => {
@@ -87,6 +88,10 @@ const Instagram = ({ baseHue }) => {
         borderColor: `hsl(${baseHue}, 70%, 60%)`,
     };
 
+    const addBtnCss = {
+        backgroundColor: `hsl(${baseHue}, 70%, 60%)`
+    };
+
 
     const updateTag = value => {
         setIsWaiting(true);
@@ -145,6 +150,8 @@ const Instagram = ({ baseHue }) => {
             const offSet = window.pageYOffset;
             const maxIdSuffix = (feed.length > 1 && isMore) ? `&max_id=${feed[feed.length - 1].node.id}` : '';
             let raw, data, nodes, next;
+            console.log('more', isMore)
+            if (!isMore) setIsWaiting(true);
             if (displayByHash) {
                 raw = await fetch(`https://www.instagram.com/explore/tags/${tag}/?__a=1${maxIdSuffix}`);
                 data = await raw.json();
@@ -182,112 +189,119 @@ const Instagram = ({ baseHue }) => {
             }
             const cropped = displayByHash ? sliceByCols([...next], COLS) : next;
             setFeed(cropped);
+
             if (isMore) {
                 window.scrollTo( 0, offSet);
                 setIsMore(false);
             }
+            setIsWaiting(false);
         }
         getFeed();
     }, [isMore, tag, selectedArtist, displayByHash]);
 
     return (
-        <div className={st.instagram}>
-            <div className={st.topControls}>
-                <button
-                    style={buttonCss}
-                    className={st.switcher}
-                    onClick={() => onTermSwitch()}
-                >
-                    switch to {displayByHash ? 'username' : 'hashtag'}
-                </button>
-
-                {/*{isAccessErr && (<span>PRIVATE ACCOUNT</span>)}*/}
-                {/*{isUndefPage && (<span>PAGE UNDEFINED</span>)}*/}
-
-                {displayByHash ? (
-                    <div
-                        className={st.inputWrap}
-                        ref={searchBox}
-                        style={inputCss}
+            <div className={st.instagram}>
+                <div className={st.topControls}>
+                    <button
+                        style={buttonCss}
+                        className={st.switcher}
+                        onClick={() => onTermSwitch()}
                     >
-                        <input
-                            className={st.input}
+                        switch to {displayByHash ? 'username' : 'hashtag'}
+                    </button>
+
+                    {/*{isAccessErr && (<span>PRIVATE ACCOUNT</span>)}*/}
+                    {/*{isUndefPage && (<span>PAGE UNDEFINED</span>)}*/}
+
+                    {displayByHash ? (
+                        <div
+                            className={st.inputWrap}
+                            ref={searchBox}
                             style={inputCss}
-                            autoFocus
-                            type="text"
-                            defaultValue={tag}
-                            onChange={({ target }) => updateTag(target.value)}
-                        />
-                        <span
-                            className={st.hash}
-                            style={hashCss}
                         >
-                            #
-                        </span>
-                    </div>
+                            <input
+                                className={st.input}
+                                style={inputCss}
+                                autoFocus
+                                type="text"
+                                defaultValue={tag}
+                                onChange={({ target }) => updateTag(target.value)}
+                            />
+                            <span
+                                className={st.hash}
+                                style={hashCss}
+                            >
+                                #
+                            </span>
+                        </div>
+                    ) : (
+                        <>
+                            <select
+                                className={st.select}
+                                style={inputCss}
+                                name="artists"
+                                id="artists"
+                                autoFocus
+                                onChange={({ target }) => updateArtist(target.value)}
+                            >
+                                {artists.map(a => (
+                                    <option key={a}>{a}</option>
+                                ))}
+                            </select>
+                        </>
+                    )}
+                </div>
+                {isWaiting ? (
+                    <Preloader baseHue={baseHue} />
                 ) : (
                     <>
-                        {/*<div className={st.selectLabel}>select artist:</div>*/}
-                        <select
-                            className={st.select}
-                            style={inputCss}
-                            name="artists"
-                            id="artists"
-                            autoFocus
-                            onChange={({ target }) => updateArtist(target.value)}
+                        <div
+                            className={st.feed}
+                            ref={feedBox}
                         >
-                            {artists.map(a => (
-                                <option key={a}>{a}</option>
-                            ))}
-                        </select>
-                    </>
+                            {feed.length > 0 && feed.map(({ node }) => (
+                                <div
+                                    className={st.wrap}
+                                    key={node.id}
+                                >
+                                    <a
+                                        className={st.item}
+                                        href={`https://www.instagram.com/p/${node.shortcode}/`}
+                                        rel="noopener noreferrer"
+                                        target="_blank"
+                                    >
+                                        <img
+                                            className={st.image}
+                                            src={node.display_url}
+                                            alt={node.shortcode}
+                                        />
 
+                                    </a>
+                                    <button
+                                        style={addBtnCss}
+                                        className={st.add}
+                                        onClick={() => setNewFav({
+                                            display_url: node.display_url,
+                                            shortcode: node.shortcode
+                                        })}
+                                    >
+                                        <span>+</span>
+                                    </button>
+                                </div>
+
+                            ))}
+                        </div>
+                        <button
+                            style={buttonCss}
+                            className={st.more}
+                            onClick={() => setIsMore(true)}
+                        >
+                            more
+                        </button>
+                    </>
                 )}
             </div>
 
-            <div
-                className={st.feed}
-                ref={feedBox}
-            >
-                {feed.length > 0 && feed.map(({ node }) => (
-                    <div
-                        className={st.wrap}
-                        key={node.id}
-                    >
-                        <a
-                            className={st.item}
-                            href={`https://www.instagram.com/p/${node.shortcode}/`}
-                            rel="noopener noreferrer"
-                            target="_blank"
-                        >
-                            <img
-                                className={st.image}
-                                src={node.display_url}
-                                alt={node.shortcode}
-                            />
-
-                        </a>
-                        <button
-                            className={st.add}
-                            onClick={() => setNewFav({
-                                display_url: node.display_url,
-                                shortcode: node.shortcode
-                            })}
-                        >
-                            +
-                        </button>
-                    </div>
-
-                ))}
-            </div>
-            <button
-                style={buttonCss}
-                className={st.more}
-                onClick={() => setIsMore(true)}
-            >
-                more
-            </button>
-        </div>
     );
 }
 

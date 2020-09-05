@@ -8,8 +8,10 @@ export default ({ h, baseHue }) => {
         cellSize = 5;
 
     const setup = (p5, canvasParentRef) => {
-        p5.createCanvas(p5.windowWidth, h).parent(canvasParentRef);
+        // p5.createCanvas(p5.windowWidth, h).parent(canvasParentRef);
+        p5.createCanvas(p5.windowWidth, 300).parent(canvasParentRef);
         p5.background(255);
+        p5.pixelDensity(2);
         p5.noStroke();
         p5.colorMode(p5.HSB, 360, 100, 100);
         countX = p5.width / cellSize;

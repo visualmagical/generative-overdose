@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import Article from '../Article';
+import Preloader from '../Preloader';
 import st from "./styles.module.css";
-
 import Parser from 'rss-parser';
+
+
 let parser = new Parser();
 
 const urlList = {
@@ -16,9 +18,12 @@ const urlList = {
 }
 const News = ({ baseHue }) => {
     const [feed, setFeed] = useState('');
+    const [isWaiting, setIsWaiting] = useState(false);
     const SNIPPET_LENGTH = 3000;
 
     useEffect(() => {
+        setIsWaiting(true);
+
         const CORS_PROXY = "https://cors-anywhere.herokuapp.com/";
         let cached = [];
         let fresh = [];
@@ -28,6 +33,7 @@ const News = ({ baseHue }) => {
             cached = await rawdata.json();
             console.log('preloaded', cached)
             setFeed(cached);
+            setIsWaiting(false);
         }
 
         const getFeed = async () => {
@@ -127,7 +133,6 @@ const News = ({ baseHue }) => {
                 );
                 if (loadNews) setFeed(ff);
             }
-            // if (loadNews) setFeed(ff);
         }
         getCashedFeed();
         getFeed()
@@ -158,26 +163,31 @@ const News = ({ baseHue }) => {
         //         // .then(data => setColossal(data))
 
 
+        // 'http://feeds.feedburner.com/NervousSystem'
+
+
     }, []);
 
     return (
         <main className={st.main}>
-            <ul>
-                {feed && feed.map(c => (
-                    <Article
-                        key={c.title}
-                        title={c.title}
-                        link={c.link}
-                        date={c.formattedDate}
-                        hue={baseHue}
-                        keywords={c.categories}
-                        source={c.source}
-                        // image={c.image}
-                    />
-                ))}
-            </ul>
-
-
+            {isWaiting ? (
+                <Preloader baseHue={baseHue} />
+            ) : (
+                <ul>
+                    {feed && feed.map(c => (
+                        <Article
+                            key={c.title}
+                            title={c.title}
+                            link={c.link}
+                            date={c.formattedDate}
+                            hue={baseHue}
+                            keywords={c.categories}
+                            source={c.source}
+                            // image={c.image}
+                        />
+                    ))}
+                </ul>
+            )}
         </main>
     );
 }
