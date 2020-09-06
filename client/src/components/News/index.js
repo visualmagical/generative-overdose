@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import Article from '../Article';
-import Preloader from '../Preloader';
+// import Preloader from '../Preloader';
+import Popup from '../Popup';
+import NewsModal from '../NewsModal';
+
 import st from "./styles.module.css";
 import Parser from 'rss-parser';
 
@@ -17,9 +20,12 @@ const urlList = {
     nervous: 'http://feeds.feedburner.com/NervousSystem',
 }
 const News = ({ baseHue }) => {
-    const [feed, setFeed] = useState('');
+    const [feed, setFeed] = useState([]);
     const [isWaiting, setIsWaiting] = useState(false);
+    const [isPopupOpen, setIsPopupOpen] = useState(false);
     const SNIPPET_LENGTH = 3000;
+    const [shouldLoadNews, setShouldLoadNews] = useState(false);
+    const [futureNews, setFutureNews] = useState([]);
 
     useEffect(() => {
         setIsWaiting(true);
@@ -31,7 +37,7 @@ const News = ({ baseHue }) => {
         const getCashedFeed =  async () => {
             const rawdata = await fetch('api/get-news')
             cached = await rawdata.json();
-            console.log('preloaded', cached)
+            // console.log('preloaded', cached)
             setFeed(cached);
             setIsWaiting(false);
         }
@@ -125,17 +131,20 @@ const News = ({ baseHue }) => {
                 },
                 body: JSON.stringify({ news: ff }),
             })
-            console.log('titles ',ff[0].title, cached[0].title, ff[0].title === cached[0].title)
+            // console.log('titles ',ff[0].title, cached[0].title, ff[0].title === cached[0].title)
 
             if (ff[0].title !== cached[0].title) {
-                const loadNews = window.confirm(
-                    "fresh news arrived. load them?"
-                );
-                if (loadNews) setFeed(ff);
+                // const loadNews = window.confirm(
+                //     "fresh news arrived. load them?"
+                // );
+                // if (loadNews) setFeed(ff);
+                setFutureNews(ff);
+                setIsPopupOpen(true);
             }
         }
         getCashedFeed();
         getFeed()
+
 
 
         // parser.parseURL(CORS_PROXY + urlList.rizhome, function(err, feed) {
@@ -168,12 +177,38 @@ const News = ({ baseHue }) => {
 
     }, []);
 
+    useEffect(() => {
+        if (shouldLoadNews && futureNews?.length > 0) {
+            setFeed(futureNews);
+            setShouldLoadNews(false);
+        }
+    },[shouldLoadNews, futureNews])
+
+    const handleModalAnswer = answer => {
+        if (answer === "yes") setShouldLoadNews(true);
+        if (answer === "idk" && Math.random() > 0.5) setShouldLoadNews(true);
+        setIsPopupOpen(false);
+    }
+
     return (
-        <main className={st.main}>
+        <div className={st.main}>
+            {isPopupOpen && (
+                <Popup
+                    handleClose={() => setIsPopupOpen(false)}
+                    baseHue={baseHue}
+                >
+                    <NewsModal
+                        baseHue={baseHue}
+                        title="fresh news arrived. load them?"
+                        handleAnswer={handleModalAnswer}
+                    />
+                </Popup>
+            )}
             {isWaiting ? (
-                <Preloader baseHue={baseHue} />
+                // <Preloader baseHue={baseHue} />
+                console.log('waiting')
             ) : (
-                <ul>
+                <ul className={st.list}>
                     {feed && feed.map(c => (
                         <Article
                             key={c.title}
@@ -188,7 +223,7 @@ const News = ({ baseHue }) => {
                     ))}
                 </ul>
             )}
-        </main>
+        </div>
     );
 }
 

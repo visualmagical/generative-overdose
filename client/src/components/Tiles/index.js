@@ -2,14 +2,13 @@ import React from "react";
 import Sketch from "react-p5";
 import st from "./styles.module.css";
 
-export default ({ h, baseHue }) => {
+export default ({h = 300, baseHue }) => {
     let countX,
         countY,
         cellSize = 5;
 
     const setup = (p5, canvasParentRef) => {
-        // p5.createCanvas(p5.windowWidth, h).parent(canvasParentRef);
-        p5.createCanvas(p5.windowWidth, 300).parent(canvasParentRef);
+        p5.createCanvas(p5.windowWidth, h).parent(canvasParentRef);
         p5.background(255);
         p5.pixelDensity(2);
         p5.noStroke();

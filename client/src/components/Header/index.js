@@ -1,4 +1,4 @@
-import React, {useState, useRef, useLayoutEffect} from 'react';
+import React, { useRef } from 'react';
 import Tiles from '../Tiles';
 import Logo from '../Logo';
 import st from './styles.module.css';
@@ -6,15 +6,14 @@ import logoSt from '../Logo/styles.module.css'
 
 
 const Header = ({ baseHue }) => {
-    const [ h, setH] = useState(0);
-    const [isHeightFound, setIsHeightFound] = useState(false);
+    // const [ h, setH] = useState(0);
     const headerRef = useRef(null);
 
-    useLayoutEffect(() => {
-        // not working 😥
-        const height = headerRef.current.getBoundingClientRect().bottom;
-        setH(height);
-    }, [])
+    // useLayoutEffect(() => {
+    //     // not working 😥
+    //     const height = headerRef.current.getBoundingClientRect().bottom;
+    //     setH(height);
+    // }, [])
 
     return (
         <header className={st.header}>
@@ -26,7 +25,10 @@ const Header = ({ baseHue }) => {
                 generative
                 overdose
             </h1>
-            <Tiles h={h} baseHue={baseHue}/>
+            <Tiles
+                // h={h}
+                baseHue={baseHue}
+            />
             <Logo />
         </header>
     );

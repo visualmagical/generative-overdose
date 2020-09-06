@@ -1,0 +1,37 @@
+.button {
+    cursor: pointer;
+    background-color: #fff;
+    border: 2px solid #fff;
+    font-size: 16px;
+    font-family: 'PT Sans', sans-serif;
+    border-radius: 2px;
+    cursor: pointer;
+}
+.button:focus {
+    outline: none;
+}
+
+.button:hover {
+    color: #fff;
+    border: 2px solid #333 !important;
+    background-color: #333 !important;
+}
+
+.transp {
+    border: 1px solid #fff !important;
+    background-color: transparent;
+}
+
+.transp:not(:hover) {
+    color: #fff !important;
+}
+
+.transp:hover {
+    font-weight: bold;
+    background-color: #fff !important;
+    border: 1px solid #fff !important;
+}
+
+.w100 {
+    width: 100px;
+}

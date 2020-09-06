@@ -76,7 +76,6 @@ app.post('/api/fav-images', (req, res) => {
 })
 
 app.post('/api/save-news', (req, res) => {
-    console.log(req.body.news[0])
     fs.writeFile(`./news.json`, JSON.stringify(req.body.news), err => {
         if (err) throw err;
         console.log("Done writing"); // Success

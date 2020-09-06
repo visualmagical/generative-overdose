@@ -1,14 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import Preloader from '../Preloader';
 import st from "./styles.module.css";
+import Popup from "../Popup";
+import NewsModal from "../NewsModal";
 
 
 
 const Favs = ({ baseHue }) => {
-    const [favs, setFavs] = useState([]);
     const [isWaiting, setIsWaiting] = useState(false)
     const [favvs, setFavvs] = useState([]);
     const [weirdFav, setWeirdFav] = useState(null);
+    const [isPopupOpen, setIsPopupOpen] = useState(false);
+    const [removeWeirdFav, setRemoveWeirdFav] = useState(false);
     // const COLS = 4;
 
     const rmBtnCss = {
@@ -21,7 +24,6 @@ const Favs = ({ baseHue }) => {
             const jsondata = await fetch('/api/get-favs')
             const data = await jsondata.json();
             const favsReversed = await data.nodes?.reverse()
-            setFavs(favsReversed);
 
             const promises = favsReversed.map( f => {
                 return fetch('/api/fav-images', {
@@ -85,11 +87,38 @@ const Favs = ({ baseHue }) => {
             const newFavvs = [...favvs.filter(f => (weirdFav.shortcode !== f.shortcode))]
             setFavvs(newFavvs);
         }
-        if (weirdFav) removeFav();
-    }, [weirdFav])
+        if (removeWeirdFav && weirdFav) {
+            removeFav();
+            setRemoveWeirdFav(false);
+            setWeirdFav(null);
+        }
+    }, [removeWeirdFav, weirdFav, favvs])
+
+    const handleModalAnswer = answer => {
+        if (answer === "yes") setRemoveWeirdFav(true);
+        if (answer === "idk" && Math.random() > 0.5) setRemoveWeirdFav(true);
+        setIsPopupOpen(false);
+    }
+
+    const handleRemoveFav = favObj => {
+        setWeirdFav(favObj);
+        setIsPopupOpen(true);
+    }
 
     return (
         <div className={st.instagram}>
+            {isPopupOpen && (
+                <Popup
+                    handleClose={() => setIsPopupOpen(false)}
+                    baseHue={baseHue}
+                >
+                    <NewsModal
+                        baseHue={baseHue}
+                        title="remove this image?"
+                        handleAnswer={handleModalAnswer}
+                    />
+                </Popup>
+            )}
             {isWaiting ? (
                 <Preloader baseHue={baseHue} />
             ) : (
@@ -117,7 +146,7 @@ const Favs = ({ baseHue }) => {
                             <button
                                 className={st.add}
                                 style={rmBtnCss}
-                                onClick={() => setWeirdFav({shortcode: node.shortcode})}
+                                onClick={() => handleRemoveFav({shortcode: node.shortcode})}
                             >
                                 ✕
                             </button>

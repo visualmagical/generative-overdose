@@ -59,11 +59,13 @@ const Instagram = ({ baseHue }) => {
     const [feed, setFeed] = useState([]);
     const [isMore, setIsMore] = useState(false);
     const [isWaiting, setIsWaiting] = useState(false);
-    const [inputInvalid, setInputInvalid] = useState(false);
+    // const [inputInvalid, setInputInvalid] = useState(false);
     const [displayByHash, setDisplayByHash] = useState(false);
     const [selectedArtist, setSelectedArtist] = useState(artists[0]);
-    const [isAccessErr, setIsAccessErr] = useState(false);
-    const [isUndefPage, setIsUndefPage] = useState(false);
+    // const [isAccessErr, setIsAccessErr] = useState(false);
+    // const [isUndefPage, setIsUndefPage] = useState(false);
+    const [triggerMore, setTriggerMore] = useState(1);
+
 
     const [userInfo, setUserInfo] = useState(null);
 
@@ -122,7 +124,7 @@ const Instagram = ({ baseHue }) => {
                 setIsNewTerm(true)
             } else {
                 setIsWaiting(false)
-                setInputInvalid(true)
+                // setInputInvalid(true)
             }
         } else {
             setIsWaiting(false)
@@ -162,8 +164,8 @@ const Instagram = ({ baseHue }) => {
 
                 if (!parsed.graphql) {
                     console.log('PAGE UNDEFINED')
-                    setIsUndefPage(true);
-                    setTimeout(() => setIsUndefPage(false), 3000)
+                    // setIsUndefPage(true);
+                    // setTimeout(() => setIsUndefPage(false), 3000)
                     return;
                 }
                 const userid = parsed.graphql.user.id;
@@ -174,8 +176,8 @@ const Instagram = ({ baseHue }) => {
                 nodes = data.data.user.edge_owner_to_timeline_media.edges;
                 if (nodes.length < 1) {
                     console.log('PRIVATE ACCOUNT')
-                    setIsAccessErr(true);
-                    setTimeout(() => setIsAccessErr(false), 3000)
+                    // setIsAccessErr(true);
+                    // setTimeout(() => setIsAccessErr(false), 3000)
                     return;
                 }
                 setUserInfo(data.data.user.edge_owner_to_timeline_media.page_info)
@@ -197,7 +199,7 @@ const Instagram = ({ baseHue }) => {
             setIsWaiting(false);
         }
         getFeed();
-    }, [isMore, tag, selectedArtist, displayByHash]);
+    }, [triggerMore, tag, selectedArtist, displayByHash]);
 
     return (
             <div className={st.instagram}>
@@ -294,7 +296,11 @@ const Instagram = ({ baseHue }) => {
                         <button
                             style={buttonCss}
                             className={st.more}
-                            onClick={() => setIsMore(true)}
+                            onClick={() => {
+                                setIsMore(true);
+                                setTriggerMore(Math.random());
+                                // setIsMore(false);
+                            }}
                         >
                             more
                         </button>
