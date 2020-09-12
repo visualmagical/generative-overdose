@@ -11,7 +11,7 @@ const Footer = ({ baseHue }) => (
         <p>
             <span>{"made with <З by "}</span>
             <a
-                href="https://github.com/katia-trifonova"
+                href="https://github.com/visualmagical"
                 rel="noopener noreferrer"
                 target="_blank"
                 className={st.katia}

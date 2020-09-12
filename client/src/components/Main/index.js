@@ -5,7 +5,7 @@ import Nav from "../Nav";
 import Favs from "../Favs";
 
 const Main = ({ baseHue }) => {
-    const [selected, setSelected] = useState('news');
+    const [selected, setSelected] = useState('instagram');
 
     return (
         <div style={{flex: "1 0 auto"}}>

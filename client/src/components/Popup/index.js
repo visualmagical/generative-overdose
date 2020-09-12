@@ -23,7 +23,7 @@ const Popup = ({ children, handleClose, baseHue }) => {
     }
 
     return ReactDOM.createPortal(
-        <div className={st.shadow}>{console.log('rerender')}
+        <div className={st.shadow}>
             <div
                 className={st.popup}
                 style={{backgroundColor: `hsl(${baseHue}, 70%, 60%)`}}

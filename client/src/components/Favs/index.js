@@ -144,6 +144,7 @@ const Favs = ({ baseHue }) => {
 
                             </a>
                             <button
+                                title="not cool anymore"
                                 className={st.add}
                                 style={rmBtnCss}
                                 onClick={() => handleRemoveFav({shortcode: node.shortcode})}

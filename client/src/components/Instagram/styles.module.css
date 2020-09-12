@@ -91,10 +91,34 @@
     visibility: hidden;
 }
 
+.fav {
+    pointer-events: none;
+    background-color: limegreen !important;
+
+}
+
+.fav:hover {
+    cursor: default;
+}
+
 .add:focus,
 .add:hover {
     outline: none;
     background-color: #333 !important;
+}
+.tooltip {
+    display: none;
+    padding: 5px;
+    border-radius: 2px;
+    color: #fff;
+    font-size: 12px;
+    position: absolute;
+    bottom: 5px;
+    left: 50%;
+}
+
+.add:hover div {
+    display: block;
 }
 
 .wrap {

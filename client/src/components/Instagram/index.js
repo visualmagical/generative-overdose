@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import { useDebounce } from '../../tools/debounce';
 import Preloader from '../Preloader';
 import st from "./styles.module.css";
+import cn from 'classnames';
 
 const uniqBy = (ary, key) => {
     let seen = new Set();
@@ -58,8 +59,9 @@ const artists = [
 const Instagram = ({ baseHue }) => {
     const [feed, setFeed] = useState([]);
     const [isMore, setIsMore] = useState(false);
-    const [isWaiting, setIsWaiting] = useState(false);
-    // const [inputInvalid, setInputInvalid] = useState(false);
+    const [showMoreBtn, setShowMoreBtn] = useState(true);
+    const [isWaiting, setIsWaiting] = useState(true);
+    const [inputInvalid, setInputInvalid] = useState(false);
     const [displayByHash, setDisplayByHash] = useState(false);
     const [selectedArtist, setSelectedArtist] = useState(artists[0]);
     // const [isAccessErr, setIsAccessErr] = useState(false);
@@ -71,7 +73,7 @@ const Instagram = ({ baseHue }) => {
 
 
     const [isNewTerm, setIsNewTerm] = useState(false);
-    const [input, setInput] = useState('');
+    const [input, setInput] = useState('generativeart');
     const [tag, setTag] = useState('generativeart');
     const [newFav, setNewFav] = useState(null);
     const feedBox = useRef(null);
@@ -115,8 +117,7 @@ const Instagram = ({ baseHue }) => {
     }
 
     useEffect(() => {
-
-        if (debouncedSearchTerm) {
+        if (debouncedSearchTerm.length > 0) {
             const regex = /^[A-Za-z0-9]+$/
             const isValid = regex.test(debouncedSearchTerm);
             if (isValid) {
@@ -124,9 +125,12 @@ const Instagram = ({ baseHue }) => {
                 setIsNewTerm(true)
             } else {
                 setIsWaiting(false)
-                // setInputInvalid(true)
+                setInputInvalid(true)
+                console.log('INPUT INVALID')
             }
         } else {
+            console.log('NO TERM INVALID')
+            setInputInvalid(true);
             setIsWaiting(false)
         }
     }, [debouncedSearchTerm])
@@ -140,9 +144,6 @@ const Instagram = ({ baseHue }) => {
                 },
                 body: JSON.stringify({ fav: newFav }),
             });
-
-            // const body = await response.text();
-            // console.log(body);
         }
         if (newFav) sendNewFav();
     }, [newFav]);
@@ -150,17 +151,25 @@ const Instagram = ({ baseHue }) => {
     useEffect(() => {
         const getFeed = async () => {
             const offSet = window.pageYOffset;
-            const maxIdSuffix = (feed.length > 1 && isMore) ? `&max_id=${feed[feed.length - 1].node.id}` : '';
+            const maxIdSuffix = (feed.length > 1 && isMore) ? `&max_id=${feed[feed.length - 1].id}` : '';
             let raw, data, nodes, next;
-            console.log('more', isMore)
             if (!isMore) setIsWaiting(true);
+            const favsdata = await fetch('/api/get-favs')
+            const favsnodes = await favsdata.json();
+            const favs = favsnodes.nodes;
+
             if (displayByHash) {
-                raw = await fetch(`https://www.instagram.com/explore/tags/${tag}/?__a=1${maxIdSuffix}`);
-                data = await raw.json();
-                nodes = data.graphql.hashtag.edge_hashtag_to_media.edges;
+                try {
+                    raw = await fetch(`https://www.instagram.com/explore/tags/${tag}/?__a=1${maxIdSuffix}`);
+                    data = await raw.json();
+                    nodes = data.graphql?.hashtag.edge_hashtag_to_media.edges.map(({ node }) => node) || [];
+                } catch (error) {
+                    console.log(error)
+                    nodes = [];
+                }
             } else {
                 const rawId = await fetch(`https://www.instagram.com/${selectedArtist}/?__a=1`);
-                const parsed =  await rawId.json();
+                const parsed = await rawId.json();
 
                 if (!parsed.graphql) {
                     console.log('PAGE UNDEFINED')
@@ -169,13 +178,19 @@ const Instagram = ({ baseHue }) => {
                     return;
                 }
                 const userid = parsed.graphql.user.id;
-                console.log(selectedArtist, userid);
-
                 raw = await fetch(`https://www.instagram.com/graphql/query/?query_id=17888483320059182&id=${userid}&first=12${userInfo?.end_cursor ? '&after=' + userInfo.end_cursor : ''}`)
+
                 data = await raw.json();
-                nodes = data.data.user.edge_owner_to_timeline_media.edges;
+
+                nodes = data?.data?.user.edge_owner_to_timeline_media.edges.map(({ node }) => node) || [];
+                if (nodes.length < 12) {
+                    setShowMoreBtn(false);
+                } else {
+                    setShowMoreBtn(true);
+                }
                 if (nodes.length < 1) {
                     console.log('PRIVATE ACCOUNT')
+                    setIsWaiting(false);
                     // setIsAccessErr(true);
                     // setTimeout(() => setIsAccessErr(false), 3000)
                     return;
@@ -184,13 +199,30 @@ const Instagram = ({ baseHue }) => {
             }
 
             if (isNewTerm) {
-                next = uniqBy([...nodes], it => (it.node.id));
+                next = uniqBy([...nodes], it => (it.id));
                 setIsNewTerm(false)
             } else {
-                next = uniqBy([...feed, ...nodes], it => (it.node.id)); // remove duplets
+                next = uniqBy([...feed, ...nodes], it => (it.id)); // remove duplets
             }
-            const cropped = displayByHash ? sliceByCols([...next], COLS) : next;
-            setFeed(cropped);
+
+            // TODO refactor these weird conditions if possible
+            if (
+                (displayByHash && !isNewTerm && next.length === feed.length)
+                || (displayByHash && next.length < 12)
+            ) {
+                setShowMoreBtn(false);
+            } else if (displayByHash) {
+                setShowMoreBtn(true);
+            }
+            const cropped = displayByHash && nodes.length > 12 ? sliceByCols([...next], COLS) : next;
+            const checkedFav = cropped.map(node => {
+                const isFav = favs.find(fav => (
+                    fav.shortcode === node.shortcode
+                ))
+                if (isFav) return Object.assign(node, { isFav: true })
+                return Object.assign(node, { isFav: false })
+            })
+            setFeed(checkedFav);
 
             if (isMore) {
                 window.scrollTo( 0, offSet);
@@ -200,6 +232,7 @@ const Instagram = ({ baseHue }) => {
         }
         getFeed();
     }, [triggerMore, tag, selectedArtist, displayByHash]);
+    // }, [triggerMore, tag, selectedArtist, displayByHash, feed, isMore, isNewTerm, userInfo]);
 
     return (
             <div className={st.instagram}>
@@ -261,7 +294,7 @@ const Instagram = ({ baseHue }) => {
                             className={st.feed}
                             ref={feedBox}
                         >
-                            {feed.length > 0 && feed.map(({ node }) => (
+                            {feed.length > 0 ? feed.map(node => (
                                 <div
                                     className={st.wrap}
                                     key={node.id}
@@ -280,30 +313,39 @@ const Instagram = ({ baseHue }) => {
 
                                     </a>
                                     <button
+                                        title="add to awesomeness"
                                         style={addBtnCss}
-                                        className={st.add}
-                                        onClick={() => setNewFav({
-                                            display_url: node.display_url,
-                                            shortcode: node.shortcode
-                                        })}
+                                        className={cn([st.add], {[st.fav]: node.isFav})}
+                                        onClick={() => {
+                                            node.isFav = true;
+                                            setNewFav({
+                                                display_url: node.display_url,
+                                                shortcode: node.shortcode
+                                            })
+                                        }}
                                     >
-                                        <span>+</span>
+                                        {node.isFav ? <span>✓︎</span> : <span>+</span>}
                                     </button>
+
                                 </div>
 
-                            ))}
+                            )) : (
+                                <span>NO RESULTS</span>
+                            )}
                         </div>
-                        <button
-                            style={buttonCss}
-                            className={st.more}
-                            onClick={() => {
-                                setIsMore(true);
-                                setTriggerMore(Math.random());
-                                // setIsMore(false);
-                            }}
-                        >
-                            more
-                        </button>
+                        {showMoreBtn && (
+                            <button
+                                style={buttonCss}
+                                className={st.more}
+                                onClick={() => {
+                                    setIsMore(true);
+                                    setTriggerMore(Math.random());
+                                    // setIsMore(false);
+                                }}
+                            >
+                                more
+                            </button>
+                        )}
                     </>
                 )}
             </div>
