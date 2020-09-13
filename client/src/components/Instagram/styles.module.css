@@ -28,8 +28,6 @@
 }
 
 .inputWrap {
-    /*margin-bottom: 60px;*/
-    /*height: 100px;*/
     position: relative;
     display: flex;
     font-size: 16px;
@@ -50,6 +48,8 @@
     font-family: 'PT Sans', sans-serif;
 }
 
+
+
 .hash {
     position: absolute;
     width: 1em;
@@ -66,6 +66,10 @@
     border: 2px solid #333 !important;
     color: #333 !important;
     outline: none;
+}
+
+.input.invalid {
+    border-color: #f00 !important;
 }
 
 .input:focus + .hash {
@@ -105,16 +109,6 @@
 .add:hover {
     outline: none;
     background-color: #333 !important;
-}
-.tooltip {
-    display: none;
-    padding: 5px;
-    border-radius: 2px;
-    color: #fff;
-    font-size: 12px;
-    position: absolute;
-    bottom: 5px;
-    left: 50%;
 }
 
 .add:hover div {
@@ -196,4 +190,22 @@
 
 .selectLabel {
     margin-right: .5em;
+}
+
+.noResults {
+    font-size: 24px;
+    text-align: center;
+    margin-bottom: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.no {
+    margin-bottom: 5px;
+}
+
+.kek {
+    font-size: 48px;
+    font-weight: bold;
 }

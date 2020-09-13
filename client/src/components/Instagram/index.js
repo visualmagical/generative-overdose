@@ -123,15 +123,18 @@ const Instagram = ({ baseHue }) => {
             if (isValid) {
                 setTag(debouncedSearchTerm)
                 setIsNewTerm(true)
+                if (inputInvalid) setInputInvalid(false);
             } else {
                 setIsWaiting(false)
                 setInputInvalid(true)
+                setTag('')
                 console.log('INPUT INVALID')
             }
         } else {
-            console.log('NO TERM INVALID')
+            console.log('NO TERM')
             setInputInvalid(true);
             setIsWaiting(false)
+            setTag('')
         }
     }, [debouncedSearchTerm])
 
@@ -245,9 +248,6 @@ const Instagram = ({ baseHue }) => {
                         switch to {displayByHash ? 'username' : 'hashtag'}
                     </button>
 
-                    {/*{isAccessErr && (<span>PRIVATE ACCOUNT</span>)}*/}
-                    {/*{isUndefPage && (<span>PAGE UNDEFINED</span>)}*/}
-
                     {displayByHash ? (
                         <div
                             className={st.inputWrap}
@@ -255,7 +255,7 @@ const Instagram = ({ baseHue }) => {
                             style={inputCss}
                         >
                             <input
-                                className={st.input}
+                                className={cn([st.input], {[st.invalid]: inputInvalid})}
                                 style={inputCss}
                                 autoFocus
                                 type="text"
@@ -290,50 +290,59 @@ const Instagram = ({ baseHue }) => {
                     <Preloader baseHue={baseHue} />
                 ) : (
                     <>
-                        <div
-                            className={st.feed}
-                            ref={feedBox}
-                        >
-                            {feed.length > 0 ? feed.map(node => (
+                        {(feed.length > 0 && !inputInvalid) ? (
+                            <div
+                                className={st.feed}
+                                ref={feedBox}
+                            >
+                                {feed.map(node => (
+                                    <div
+                                        className={st.wrap}
+                                        key={node.id}
+                                    >
+                                        <a
+                                            className={st.item}
+                                            href={`https://www.instagram.com/p/${node.shortcode}/`}
+                                            rel="noopener noreferrer"
+                                            target="_blank"
+                                        >
+                                            <img
+                                                className={st.image}
+                                                src={node.display_url}
+                                                alt={node.shortcode}
+                                            />
+
+                                        </a>
+                                        <button
+                                            title="add to awesomeness"
+                                            style={addBtnCss}
+                                            className={cn([st.add], {[st.fav]: node.isFav})}
+                                            onClick={() => {
+                                                node.isFav = true;
+                                                setNewFav({
+                                                    display_url: node.display_url,
+                                                    shortcode: node.shortcode
+                                                })
+                                            }}
+                                        >
+                                            {node.isFav ? <span>✓︎</span> : <span>+</span>}
+                                        </button>
+
+                                    </div>
+                                ))}
+                            </div>
+                        ) : (
+                            <div className={st.noResults}>
+                                <span className={st.no}>no results!</span>
                                 <div
-                                    className={st.wrap}
-                                    key={node.id}
+                                    className={st.kek}
+                                    style={{color: `hsl(${baseHue}, 70%, 60%)`}}
                                 >
-                                    <a
-                                        className={st.item}
-                                        href={`https://www.instagram.com/p/${node.shortcode}/`}
-                                        rel="noopener noreferrer"
-                                        target="_blank"
-                                    >
-                                        <img
-                                            className={st.image}
-                                            src={node.display_url}
-                                            alt={node.shortcode}
-                                        />
-
-                                    </a>
-                                    <button
-                                        title="add to awesomeness"
-                                        style={addBtnCss}
-                                        className={cn([st.add], {[st.fav]: node.isFav})}
-                                        onClick={() => {
-                                            node.isFav = true;
-                                            setNewFav({
-                                                display_url: node.display_url,
-                                                shortcode: node.shortcode
-                                            })
-                                        }}
-                                    >
-                                        {node.isFav ? <span>✓︎</span> : <span>+</span>}
-                                    </button>
-
+                                    ¯\_(ツ)_/¯
                                 </div>
-
-                            )) : (
-                                <span>NO RESULTS</span>
-                            )}
-                        </div>
-                        {showMoreBtn && (
+                            </div>
+                        )}
+                        {showMoreBtn && !inputInvalid && (
                             <button
                                 style={buttonCss}
                                 className={st.more}
